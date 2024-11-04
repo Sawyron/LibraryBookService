@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: library-book-service
+server:
+  port: 8081
