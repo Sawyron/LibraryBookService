@@ -10,9 +10,11 @@ import org.sawyron.librarybookservice.books.dtos.CreateBookMessage;
 import org.sawyron.librarybookservice.books.dtos.UpdateBookMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -39,6 +41,14 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findByIdWithAuthor(id)
                 .map(responseMapper)
                 .orElseThrow(() -> new RuntimeException("Book with id %s is not found".formatted(id)));
+    }
+
+    @Override
+    public List<BookResponse> findAllBooks(int page, int pageSize) {
+        return bookRepository.findAllBooksWithAuthors(PageRequest.of(page, pageSize))
+                .stream()
+                .map(responseMapper)
+                .toList();
     }
 
     @Override

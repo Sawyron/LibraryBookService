@@ -2,11 +2,9 @@ package org.sawyron.librarybookservice.books;
 
 import org.sawyron.librarybookservice.books.dtos.BookResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,8 +17,14 @@ public class BooksController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getBookById(@PathVariable UUID id) {
+    public ResponseEntity<BookResponse> getBookById(@PathVariable UUID id) {
         BookResponse book = bookService.findBookById(id);
         return ResponseEntity.ok(book);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BookResponse>> getAll(@RequestParam int page, @RequestParam int pageSize) {
+        List<BookResponse> books = bookService.findAllBooks(page, pageSize);
+        return ResponseEntity.ok(books);
     }
 }
