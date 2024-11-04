@@ -5,6 +5,7 @@ import org.sawyron.librarybookservice.authors.AuthorRepository;
 import org.sawyron.librarybookservice.books.Book;
 import org.sawyron.librarybookservice.books.BookRepository;
 import org.sawyron.librarybookservice.books.BookService;
+import org.sawyron.librarybookservice.books.dtos.BookResponse;
 import org.sawyron.librarybookservice.books.dtos.CreateBookMessage;
 import org.sawyron.librarybookservice.books.dtos.UpdateBookMessage;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -21,10 +23,22 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final Function<Book, BookResponse> responseMapper;
 
-    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository) {
+    public BookServiceImpl(
+            BookRepository bookRepository,
+            AuthorRepository authorRepository,
+            Function<Book, BookResponse> responseMapper) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
+        this.responseMapper = responseMapper;
+    }
+
+    @Override
+    public BookResponse findBookById(UUID id) {
+        return bookRepository.findByIdWithAuthor(id)
+                .map(responseMapper)
+                .orElseThrow(() -> new RuntimeException("Book with id %s is not found".formatted(id)));
     }
 
     @Override
