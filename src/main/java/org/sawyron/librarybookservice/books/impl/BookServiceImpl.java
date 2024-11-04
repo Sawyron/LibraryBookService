@@ -8,6 +8,7 @@ import org.sawyron.librarybookservice.books.BookService;
 import org.sawyron.librarybookservice.books.dtos.BookResponse;
 import org.sawyron.librarybookservice.books.dtos.CreateBookMessage;
 import org.sawyron.librarybookservice.books.dtos.UpdateBookMessage;
+import org.sawyron.librarybookservice.books.exceptions.BookNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -40,7 +41,7 @@ public class BookServiceImpl implements BookService {
     public BookResponse findBookById(UUID id) {
         return bookRepository.findByIdWithAuthor(id)
                 .map(responseMapper)
-                .orElseThrow(() -> new RuntimeException("Book with id %s is not found".formatted(id)));
+                .orElseThrow(() -> new BookNotFoundException("Book with id %s is not found".formatted(id)));
     }
 
     @Override
