@@ -1,5 +1,13 @@
 spring:
   application:
     name: library-book-service
-server:
-  port: 8081
+book-rabbitmq:
+  queues:
+    exchange: book-direct-exchange
+    createQueue: book-create-queue
+    updateQueue: book-update-queue
+    deleteQueue: book-delete-queue
+  routes:
+    createRoute: book-create-route
+    updateRoute: book-update-route
+    deleteRoute: book-delete-route
