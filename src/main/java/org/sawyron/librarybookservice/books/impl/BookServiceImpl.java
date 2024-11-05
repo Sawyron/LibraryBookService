@@ -96,7 +96,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookOptional.get();
         book.setTitle(message.title());
         book.setPublishedDate(message.publishedDate());
-        if (!book.getAuthor().getName().equals(message.author())) {
+        if (!book.getAuthor().getName().equalsIgnoreCase(message.author())) {
             var messageAuthor = authorRepository.findByNameIgnoreCase(message.author())
                     .orElseGet(() -> {
                         var createdAuthor = new Author();
